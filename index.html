@@ -10,6 +10,14 @@
   <body>
     <div id="app">
       <div id="pixi-container"></div>
+      <div id="mobile-controls" class="hidden">
+        <button id="btn-up">↑</button>
+        <div>
+          <button id="btn-left">←</button>
+          <button id="btn-down">↓</button>
+          <button id="btn-right">→</button>
+        </div>
+      </div>
       <div id="game-over-modal" class="hidden">
         <h2>Game Over</h2>
         <button id="restart-button">Restart</button>
@@ -25,9 +33,9 @@
         <div><span>Score: </span><span id="score">0</span></div>
         <div><span>High Score: </span><span id="high-score">0</span></div>
         <div>
-          <img src="/assets/heart.png" alt="heart" id="heart1">
-          <img src="/assets/heart.png" alt="heart" id="heart2">
-          <img src="/assets/heart.png" alt="heart" id="heart3">
+          <img src="/assets/heart.png" alt="heart" id="heart1" />
+          <img src="/assets/heart.png" alt="heart" id="heart2" />
+          <img src="/assets/heart.png" alt="heart" id="heart3" />
         </div>
       </div>
     </div>

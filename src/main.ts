@@ -188,10 +188,17 @@ const FLASH_THRESHOLD = 2000;
   function updateHeroMovement() {
     const prevX = hero.x;
     const prevY = hero.y;
-    if (keys["ArrowUp"]) hero.y -= difficultyConfig.heroSpeed;
-    if (keys["ArrowDown"]) hero.y += difficultyConfig.heroSpeed;
-    if (keys["ArrowLeft"]) hero.x -= difficultyConfig.heroSpeed;
-    if (keys["ArrowRight"]) hero.x += difficultyConfig.heroSpeed;
+
+    if (touchActive) {
+      hero.x = touchTargetX;
+      hero.y = touchTargetY;
+    } else {
+      if (keys["ArrowUp"]) hero.y -= difficultyConfig.heroSpeed;
+      if (keys["ArrowDown"]) hero.y += difficultyConfig.heroSpeed;
+      if (keys["ArrowLeft"]) hero.x -= difficultyConfig.heroSpeed;
+      if (keys["ArrowRight"]) hero.x += difficultyConfig.heroSpeed;
+    }
+
     const inScoreboardZone = hero.y < scoreboard.offsetHeight + hero.height / 2;
     const underScoreboardHorizontally =
       hero.x < scoreboard.offsetWidth + hero.width / 2;
@@ -216,6 +223,45 @@ const FLASH_THRESHOLD = 2000;
       Math.min(app.screen.height - hero.height / 2, hero.y),
     );
   }
+
+  let touchActive = false;
+  let touchTargetX = 0;
+  let touchTargetY = 0;
+
+  function getCanvasTouchPos(e: TouchEvent) {
+    const rect = app.canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    return {
+      x: t.clientX - rect.left,
+      y: t.clientY - rect.top,
+    };
+  }
+
+  app.canvas.addEventListener("touchstart", (e: TouchEvent) => {
+    e.preventDefault();
+    touchActive = true;
+    const pos = getCanvasTouchPos(e);
+    touchTargetX = pos.x;
+    touchTargetY = pos.y;
+  });
+
+  app.canvas.addEventListener("touchmove", (e: TouchEvent) => {
+    e.preventDefault();
+    if (!touchActive) return;
+    const pos = getCanvasTouchPos(e);
+    touchTargetX = pos.x;
+    touchTargetY = pos.y;
+  });
+
+  app.canvas.addEventListener("touchend", (e: TouchEvent) => {
+    e.preventDefault();
+    touchActive = false;
+  });
+
+  app.canvas.addEventListener("touchcancel", (e: TouchEvent) => {
+    e.preventDefault();
+    touchActive = false;
+  });
 
   function updateEnemies() {
     enemies = enemies.filter((enemy) => {
